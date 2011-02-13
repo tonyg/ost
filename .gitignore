@@ -1,0 +1,4 @@
+kernel/*.o
+kernel/kernel.elf
+tools/image.iso
+tools/tree/
