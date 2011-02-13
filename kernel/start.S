@@ -153,105 +153,122 @@ start_long_mode:
 	ltr	%ax
 
 	/* Fill IDT slots */
-	movq	$trap00, %rbx
-	movq	$0x00, %rdi
-	call	setup_idt_slot
-	movq	$trap01, %rbx
-	movq	$0x01, %rdi
-	call	setup_idt_slot
-	movq	$trap02, %rbx
-	movq	$0x02, %rdi
-	call	setup_idt_slot
-	movq	$trap03, %rbx
-	movq	$0x03, %rdi
-	call	setup_idt_slot
-	movq	$trap04, %rbx
-	movq	$0x04, %rdi
-	call	setup_idt_slot
-	movq	$trap05, %rbx
-	movq	$0x05, %rdi
-	call	setup_idt_slot
-	movq	$trap06, %rbx
-	movq	$0x06, %rdi
-	call	setup_idt_slot
-	movq	$trap07, %rbx
-	movq	$0x07, %rdi
-	call	setup_idt_slot
-	movq	$trap08, %rbx
-	movq	$0x08, %rdi
-	call	setup_idt_slot
-	movq	$trap09, %rbx
-	movq	$0x09, %rdi
-	call	setup_idt_slot
-	movq	$trap0a, %rbx
-	movq	$0x0a, %rdi
-	call	setup_idt_slot
-	movq	$trap0b, %rbx
-	movq	$0x0b, %rdi
-	call	setup_idt_slot
-	movq	$trap0c, %rbx
-	movq	$0x0c, %rdi
-	call	setup_idt_slot
-	movq	$trap0d, %rbx
-	movq	$0x0d, %rdi
-	call	setup_idt_slot
-	movq	$trap0e, %rbx
-	movq	$0x0e, %rdi
-	call	setup_idt_slot
-	movq	$trap0f, %rbx
-	movq	$0x0f, %rdi
+#define FILL_IDT_SLOT(nn) \
+	movq	$trap##nn, %rbx; \
+	movq	$0x##nn, %rdi; \
 	call	setup_idt_slot
 
-	movq	$trap10, %rbx
-	movq	$0x10, %rdi
-	call	setup_idt_slot
-	movq	$trap11, %rbx
-	movq	$0x11, %rdi
-	call	setup_idt_slot
-	movq	$trap12, %rbx
-	movq	$0x12, %rdi
-	call	setup_idt_slot
-	movq	$trap13, %rbx
-	movq	$0x13, %rdi
-	call	setup_idt_slot
-	movq	$trap14, %rbx
-	movq	$0x14, %rdi
-	call	setup_idt_slot
-	movq	$trap15, %rbx
-	movq	$0x15, %rdi
-	call	setup_idt_slot
-	movq	$trap16, %rbx
-	movq	$0x16, %rdi
-	call	setup_idt_slot
-	movq	$trap17, %rbx
-	movq	$0x17, %rdi
-	call	setup_idt_slot
-	movq	$trap18, %rbx
-	movq	$0x18, %rdi
-	call	setup_idt_slot
-	movq	$trap19, %rbx
-	movq	$0x19, %rdi
-	call	setup_idt_slot
-	movq	$trap1a, %rbx
-	movq	$0x1a, %rdi
-	call	setup_idt_slot
-	movq	$trap1b, %rbx
-	movq	$0x1b, %rdi
-	call	setup_idt_slot
-	movq	$trap1c, %rbx
-	movq	$0x1c, %rdi
-	call	setup_idt_slot
-	movq	$trap1d, %rbx
-	movq	$0x1d, %rdi
-	call	setup_idt_slot
-	movq	$trap1e, %rbx
-	movq	$0x1e, %rdi
-	call	setup_idt_slot
-	movq	$trap1f, %rbx
-	movq	$0x1f, %rdi
-	call	setup_idt_slot
+	FILL_IDT_SLOT(00)
+	FILL_IDT_SLOT(01)
+	FILL_IDT_SLOT(02)
+	FILL_IDT_SLOT(03)
+	FILL_IDT_SLOT(04)
+	FILL_IDT_SLOT(05)
+	FILL_IDT_SLOT(06)
+	FILL_IDT_SLOT(07)
+	FILL_IDT_SLOT(08)
+	FILL_IDT_SLOT(09)
+	FILL_IDT_SLOT(0a)
+	FILL_IDT_SLOT(0b)
+	FILL_IDT_SLOT(0c)
+	FILL_IDT_SLOT(0d)
+	FILL_IDT_SLOT(0e)
+	FILL_IDT_SLOT(0f)
+	FILL_IDT_SLOT(10)
+	FILL_IDT_SLOT(11)
+	FILL_IDT_SLOT(12)
+	FILL_IDT_SLOT(13)
+	FILL_IDT_SLOT(14)
+	FILL_IDT_SLOT(15)
+	FILL_IDT_SLOT(16)
+	FILL_IDT_SLOT(17)
+	FILL_IDT_SLOT(18)
+	FILL_IDT_SLOT(19)
+	FILL_IDT_SLOT(1a)
+	FILL_IDT_SLOT(1b)
+	FILL_IDT_SLOT(1c)
+	FILL_IDT_SLOT(1d)
+	FILL_IDT_SLOT(1e)
+	FILL_IDT_SLOT(1f)
+	FILL_IDT_SLOT(20)
+	FILL_IDT_SLOT(21)
+	FILL_IDT_SLOT(22)
+	FILL_IDT_SLOT(23)
+	FILL_IDT_SLOT(24)
+	FILL_IDT_SLOT(25)
+	FILL_IDT_SLOT(26)
+	FILL_IDT_SLOT(27)
+	FILL_IDT_SLOT(28)
+	FILL_IDT_SLOT(29)
+	FILL_IDT_SLOT(2a)
+	FILL_IDT_SLOT(2b)
+	FILL_IDT_SLOT(2c)
+	FILL_IDT_SLOT(2d)
+	FILL_IDT_SLOT(2e)
+	FILL_IDT_SLOT(2f)
 
 	lidt	idtaddr
+
+	/* Now that we have installed handlers for the various interrupts,
+	   program the Programmable Interrupt Controller to deliver them
+	   to the correct interrupt vector slots. */
+	movw	$0x20, %dx			/* "PIC0, accept config!" */
+	movb	$0x11, %al
+	outb	%al, %dx
+
+	movw	$0xa0, %dx			/* "PIC1, accept config!" */
+	movb	$0x11, %al
+	outb	%al, %dx
+
+	movw	$0x21, %dx			/* "PIC0, use vector offset 0x20!" */
+	movb	$0x20, %al
+	outb	%al, %dx
+
+	movw	$0xa1, %dx			/* "PIC1, use vector offset 0x28!" */
+	movb	$0x28, %al
+	outb	%al, %dx
+
+	movw	$0x21, %dx			/* "PIC0, be master!" */
+	movb	$0x04, %al
+	outb	%al, %dx
+
+	movw	$0xa1, %dx			/* "PIC1, be slave!" */
+	movb	$0x02, %al
+	outb	%al, %dx
+
+	movw	$0x21, %dx			/* "PIC0, use 8086 mode!" */
+	movb	$0x01, %al
+	outb	%al, %dx
+
+	movw	$0xa1, %dx			/* "PIC1, use 8086 mode!" */
+	movb	$0x01, %al
+	outb	%al, %dx
+
+	movw	$0x21, %dx			/* "PIC0, unmask all!" */
+	movb	$0x00, %al
+	outb	%al, %dx
+
+	movw	$0xa1, %dx			/* "PIC1, unmask all!" */
+	movb	$0x00, %al
+	outb	%al, %dx
+
+	movw	$0x70, %dx			/* Reenable NMI. */
+	movb	$0x00, %al
+	outb	%al, %dx
+
+	/* Tell the clock to interrupt us at 100Hz. The clock divisor
+	   is 1193182, so at 100Hz, that makes the period 11932 = 0x2e9c. */
+	movw	$0x43, %dx			/* Send CLOCK_MODE to TIMER0_SETUP. */
+	movb	$0x34, %al
+	outb	%al, %dx
+	movw	$0x40, %dx			/* Send low byte of period. */
+	movb	$0x9c, %al
+	outb	%al, %dx
+	movw	$0x40, %dx			/* Send high byte of period. */
+	movb	$0x2e, %al
+	outb	%al, %dx
+
+	sti
 
 	movq	$(UPPER_2GB + 0xb8002), %rax
 2:	incw	0xb8000
@@ -282,77 +299,74 @@ setup_idt_slot:
 	shlq	$0x04, %rdi
 	addq	$idt, %rdi
 	movq	%rbx, %rax
-	movw	$0x8e00, %ax
+	movw	$0x8e00, %ax			/* Note for now we use INTR instead of TRAP */
+			 			/* (put 0x8f00 for TRAP) */
 	movq	%rax, 4(%rdi)
 	movl	$0x00180000, %eax
 	movw	%bx, %ax
 	movl	%eax, (%rdi)
 	ret
 
-trap00:	movq	$0x00, %rax
-	jmp	generic_trap
-trap01:	movq	$0x01, %rax
-	jmp	generic_trap
-trap02:	movq	$0x02, %rax
-	jmp	generic_trap
-trap03:	movq	$0x03, %rax
-	jmp	generic_trap
-trap04:	movq	$0x04, %rax
-	jmp	generic_trap
-trap05:	movq	$0x05, %rax
-	jmp	generic_trap
-trap06:	movq	$0x06, %rax
-	jmp	generic_trap
-trap07:	movq	$0x07, %rax
-	jmp	generic_trap
-trap08:	movq	$0x08, %rax
-	jmp	generic_trap
-trap09:	movq	$0x09, %rax
-	jmp	generic_trap
-trap0a:	movq	$0x0a, %rax
-	jmp	generic_trap
-trap0b:	movq	$0x0b, %rax
-	jmp	generic_trap
-trap0c:	movq	$0x0c, %rax
-	jmp	generic_trap
-trap0d:	movq	$0x0d, %rax
-	jmp	generic_trap
-trap0e:	movq	$0x0e, %rax
-	jmp	generic_trap
-trap0f:	movq	$0x0f, %rax
-	jmp	generic_trap
-trap10:	movq	$0x10, %rax
-	jmp	generic_trap
-trap11:	movq	$0x11, %rax
-	jmp	generic_trap
-trap12:	movq	$0x12, %rax
-	jmp	generic_trap
-trap13:	movq	$0x13, %rax
-	jmp	generic_trap
-trap14:	movq	$0x14, %rax
-	jmp	generic_trap
-trap15:	movq	$0x15, %rax
-	jmp	generic_trap
-trap16:	movq	$0x16, %rax
-	jmp	generic_trap
-trap17:	movq	$0x17, %rax
-	jmp	generic_trap
-trap18:	movq	$0x18, %rax
-	jmp	generic_trap
-trap19:	movq	$0x19, %rax
-	jmp	generic_trap
-trap1a:	movq	$0x1a, %rax
-	jmp	generic_trap
-trap1b:	movq	$0x1b, %rax
-	jmp	generic_trap
-trap1c:	movq	$0x1c, %rax
-	jmp	generic_trap
-trap1d:	movq	$0x1d, %rax
-	jmp	generic_trap
-trap1e:	movq	$0x1e, %rax
-	jmp	generic_trap
-trap1f:	movq	$0x1f, %rax
-	jmp	generic_trap
+#define DEFTRAP(nn) \
+	trap##nn: \
+		movq	$0x##nn, %rax; \
+		jmp	generic_trap
+
+#define DEFINTH(nn) \
+	trap##nn: \
+		pushq	%rax; \
+		movq	$0x##nn, %rax; \
+		jmp	generic_interrupt
+
+	DEFTRAP(00)
+	DEFTRAP(01)
+	DEFTRAP(02)
+	DEFTRAP(03)
+	DEFTRAP(04)
+	DEFTRAP(05)
+	DEFTRAP(06)
+	DEFTRAP(07)
+	DEFTRAP(08)
+	DEFTRAP(09)
+	DEFTRAP(0a)
+	DEFTRAP(0b)
+	DEFTRAP(0c)
+	DEFTRAP(0d)
+	DEFTRAP(0e)
+	DEFTRAP(0f)
+	DEFTRAP(10)
+	DEFTRAP(11)
+	DEFTRAP(12)
+	DEFTRAP(13)
+	DEFTRAP(14)
+	DEFTRAP(15)
+	DEFTRAP(16)
+	DEFTRAP(17)
+	DEFTRAP(18)
+	DEFTRAP(19)
+	DEFTRAP(1a)
+	DEFTRAP(1b)
+	DEFTRAP(1c)
+	DEFTRAP(1d)
+	DEFTRAP(1e)
+	DEFTRAP(1f)
+
+	DEFINTH(20)
+	DEFINTH(21)
+	DEFINTH(22)
+	DEFINTH(23)
+	DEFINTH(24)
+	DEFINTH(25)
+	DEFINTH(26)
+	DEFINTH(27)
+	DEFINTH(28)
+	DEFINTH(29)
+	DEFINTH(2a)
+	DEFINTH(2b)
+	DEFINTH(2c)
+	DEFINTH(2d)
+	DEFINTH(2e)
+	DEFINTH(2f)
 
 generic_trap:
 	movq	%rax, %rbx
@@ -363,6 +377,37 @@ generic_trap:
 	movw	%bx, 2(%rax)
 1:	incw	(%rax)
 	jmp	1b
+
+generic_interrupt:
+	pushq	%rbx
+	pushq	%rcx
+	pushq	%rdx
+
+	movq	%rax, %rbx
+	movq	%rax, %rcx
+
+	shlq	$2, %rax
+	addq	$(UPPER_2GB + 0xb8000 + (80 * 24 * 2)), %rax
+	addb	$0x30, %bl
+	movb	$0x0a, %bh
+	movw	%bx, 2(%rax)
+	incw	(%rax)
+
+	movw	$0x20, %dx
+	movb	$0x20, %al
+	outb	%al, %dx
+	cmpb	%cl, 8
+	jl	1f
+	movw	$0xa0, %dx
+	movb	$0x20, %al
+	outb	%al, %dx
+1:
+
+	popq	%rdx
+	popq	%rcx
+	popq	%rbx
+	popq	%rax
+	iretq
 
 	.data
 
