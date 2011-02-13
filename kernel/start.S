@@ -13,7 +13,6 @@
 	.global	realstart			/* export, to keep ld happy */
 
 	.global pml4_base, pdp_base, pd_base, pt_base
-	.global panic
 
 realstart:
 start:
@@ -118,7 +117,7 @@ start_long_mode:
 	.code64
 
 	/* Set the other segments. */
-	movl	$0x20, %eax
+	movw	$0x20, %ax
 	movw	%ax, %ds
 	movw	%ax, %es
 	movw	%ax, %fs
@@ -139,6 +138,118 @@ start_long_mode:
 	pushq	$1f
 	lretq
 1:
+
+	/* Update the GDT's TSS entry to point to the correct piece of memory. */
+	movq	$tss_base, %rax
+	movw	%ax, tss_baseptr_low16
+	shrq	$16, %rax
+	movb	%al, tss_baseptr_mid16_low8
+	movb	%ah, tss_baseptr_mid16_high8
+	shrq	$16, %rax
+	movl	%eax, tss_baseptr_high32
+
+	/* Actually load the TSS into the TR. */
+	movq	$0x28, %rax
+	ltr	%ax
+
+	/* Fill IDT slots */
+	movq	$trap00, %rbx
+	movq	$0x00, %rdi
+	call	setup_idt_slot
+	movq	$trap01, %rbx
+	movq	$0x01, %rdi
+	call	setup_idt_slot
+	movq	$trap02, %rbx
+	movq	$0x02, %rdi
+	call	setup_idt_slot
+	movq	$trap03, %rbx
+	movq	$0x03, %rdi
+	call	setup_idt_slot
+	movq	$trap04, %rbx
+	movq	$0x04, %rdi
+	call	setup_idt_slot
+	movq	$trap05, %rbx
+	movq	$0x05, %rdi
+	call	setup_idt_slot
+	movq	$trap06, %rbx
+	movq	$0x06, %rdi
+	call	setup_idt_slot
+	movq	$trap07, %rbx
+	movq	$0x07, %rdi
+	call	setup_idt_slot
+	movq	$trap08, %rbx
+	movq	$0x08, %rdi
+	call	setup_idt_slot
+	movq	$trap09, %rbx
+	movq	$0x09, %rdi
+	call	setup_idt_slot
+	movq	$trap0a, %rbx
+	movq	$0x0a, %rdi
+	call	setup_idt_slot
+	movq	$trap0b, %rbx
+	movq	$0x0b, %rdi
+	call	setup_idt_slot
+	movq	$trap0c, %rbx
+	movq	$0x0c, %rdi
+	call	setup_idt_slot
+	movq	$trap0d, %rbx
+	movq	$0x0d, %rdi
+	call	setup_idt_slot
+	movq	$trap0e, %rbx
+	movq	$0x0e, %rdi
+	call	setup_idt_slot
+	movq	$trap0f, %rbx
+	movq	$0x0f, %rdi
+	call	setup_idt_slot
+
+	movq	$trap10, %rbx
+	movq	$0x10, %rdi
+	call	setup_idt_slot
+	movq	$trap11, %rbx
+	movq	$0x11, %rdi
+	call	setup_idt_slot
+	movq	$trap12, %rbx
+	movq	$0x12, %rdi
+	call	setup_idt_slot
+	movq	$trap13, %rbx
+	movq	$0x13, %rdi
+	call	setup_idt_slot
+	movq	$trap14, %rbx
+	movq	$0x14, %rdi
+	call	setup_idt_slot
+	movq	$trap15, %rbx
+	movq	$0x15, %rdi
+	call	setup_idt_slot
+	movq	$trap16, %rbx
+	movq	$0x16, %rdi
+	call	setup_idt_slot
+	movq	$trap17, %rbx
+	movq	$0x17, %rdi
+	call	setup_idt_slot
+	movq	$trap18, %rbx
+	movq	$0x18, %rdi
+	call	setup_idt_slot
+	movq	$trap19, %rbx
+	movq	$0x19, %rdi
+	call	setup_idt_slot
+	movq	$trap1a, %rbx
+	movq	$0x1a, %rdi
+	call	setup_idt_slot
+	movq	$trap1b, %rbx
+	movq	$0x1b, %rdi
+	call	setup_idt_slot
+	movq	$trap1c, %rbx
+	movq	$0x1c, %rdi
+	call	setup_idt_slot
+	movq	$trap1d, %rbx
+	movq	$0x1d, %rdi
+	call	setup_idt_slot
+	movq	$trap1e, %rbx
+	movq	$0x1e, %rdi
+	call	setup_idt_slot
+	movq	$trap1f, %rbx
+	movq	$0x1f, %rdi
+	call	setup_idt_slot
 
 	lidt	idtaddr
 
@@ -167,6 +278,94 @@ multiboot_header:
 	.long	25
 	.long	0
 
+setup_idt_slot:
+	shlq	$0x04, %rdi
+	addq	$idt, %rdi
+	movq	%rbx, %rax
+	movw	$0x8e00, %ax
+	movq	%rax, 4(%rdi)
+	movl	$0x00180000, %eax
+	movw	%bx, %ax
+	movl	%eax, (%rdi)
+	ret
+
+trap00:	movq	$0x00, %rax
+	jmp	generic_trap
+trap01:	movq	$0x01, %rax
+	jmp	generic_trap
+trap02:	movq	$0x02, %rax
+	jmp	generic_trap
+trap03:	movq	$0x03, %rax
+	jmp	generic_trap
+trap04:	movq	$0x04, %rax
+	jmp	generic_trap
+trap05:	movq	$0x05, %rax
+	jmp	generic_trap
+trap06:	movq	$0x06, %rax
+	jmp	generic_trap
+trap07:	movq	$0x07, %rax
+	jmp	generic_trap
+trap08:	movq	$0x08, %rax
+	jmp	generic_trap
+trap09:	movq	$0x09, %rax
+	jmp	generic_trap
+trap0a:	movq	$0x0a, %rax
+	jmp	generic_trap
+trap0b:	movq	$0x0b, %rax
+	jmp	generic_trap
+trap0c:	movq	$0x0c, %rax
+	jmp	generic_trap
+trap0d:	movq	$0x0d, %rax
+	jmp	generic_trap
+trap0e:	movq	$0x0e, %rax
+	jmp	generic_trap
+trap0f:	movq	$0x0f, %rax
+	jmp	generic_trap
+trap10:	movq	$0x10, %rax
+	jmp	generic_trap
+trap11:	movq	$0x11, %rax
+	jmp	generic_trap
+trap12:	movq	$0x12, %rax
+	jmp	generic_trap
+trap13:	movq	$0x13, %rax
+	jmp	generic_trap
+trap14:	movq	$0x14, %rax
+	jmp	generic_trap
+trap15:	movq	$0x15, %rax
+	jmp	generic_trap
+trap16:	movq	$0x16, %rax
+	jmp	generic_trap
+trap17:	movq	$0x17, %rax
+	jmp	generic_trap
+trap18:	movq	$0x18, %rax
+	jmp	generic_trap
+trap19:	movq	$0x19, %rax
+	jmp	generic_trap
+trap1a:	movq	$0x1a, %rax
+	jmp	generic_trap
+trap1b:	movq	$0x1b, %rax
+	jmp	generic_trap
+trap1c:	movq	$0x1c, %rax
+	jmp	generic_trap
+trap1d:	movq	$0x1d, %rax
+	jmp	generic_trap
+trap1e:	movq	$0x1e, %rax
+	jmp	generic_trap
+trap1f:	movq	$0x1f, %rax
+	jmp	generic_trap
+
+generic_trap:
+	movq	%rax, %rbx
+	shlq	$1, %rax
+	addq	$(UPPER_2GB + 0xb8000 + (80 * 24 * 2)), %rax
+	addb	$0x30, %bl
+	movb	$0x0a, %bh
+	movw	%bx, 2(%rax)
+1:	incw	(%rax)
+	jmp	1b
+
+	.data
+
 	.align	8, 0
 
 idtaddr:
@@ -182,7 +381,7 @@ gdtaddr_baseptr:
 
 	.align	4, 0				/* Align to doubleword boundary */
 
-idt:	
+idt:
 	.fill	256, 8, 0
 
 gdt:	.word	0, 0, 0, 0			/* Dummy. */
@@ -215,12 +414,42 @@ gdt:	.word	0, 0, 0, 0			/* Dummy. */
 
 	/* TSS descriptor takes two slots. */
 
-	/* TODO */
+	.word	(tss_top - tss_base - 1)	/* limit 15-0   - This is 64-bit TSS. */
+tss_baseptr_low16:
+	.word	0x0000				/* base 15-0 */
+tss_baseptr_mid16_low8:
+	.byte	0x00				/* base 23-16 */
+	.byte	0x89				/* present, DPL 0, available TSS */
+	.byte	0x00				/* granularity 0, limit 19-16 */
+tss_baseptr_mid16_high8:
+	.byte	0x00				/* base 31-24 */
+tss_baseptr_high32:
+	.long	0x00000000			/* base 63-32 */
+	.long	0x00000000			/* reserved space (we are a double-width entry) */
 
-	/* In total, 5 descriptors defined so far. */
+	/* In total, 7 descriptors defined so far. */
 	/* Fill up the rest of the 256 slots. */
 
-	.fill	251, 8, 0
+	.fill	(256 - 7), 8, 0
+
+tss_base:
+	.long	0x00000000			/* reserved */
+	.quad	0x0000000000000000		/* rsp0 */
+	.quad	0x0000000000000000		/* rsp1 */
+	.quad	0x0000000000000000		/* rsp2 */
+	.quad	0x0000000000000000		/* reserved */
+	.quad	0x0000000000000000		/* ist1 */
+	.quad	0x0000000000000000		/* ist2 */
+	.quad	0x0000000000000000		/* ist3 */
+	.quad	0x0000000000000000		/* ist4 */
+	.quad	0x0000000000000000		/* ist5 */
+	.quad	0x0000000000000000		/* ist6 */
+	.quad	0x0000000000000000		/* ist7 */
+	.quad	0x0000000000000000		/* reserved */
+	.word	0x0000				/* reserved */
+	.word	(iomap_base - tss_base)		/* io map base offset */
+iomap_base:
+tss_top:
 
 	.bss
 bss_base:
