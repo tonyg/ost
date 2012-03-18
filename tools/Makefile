@@ -51,7 +51,7 @@ bootable: tree
 	sync
 	sync
 	sync
-	make cleanup-after-bootable
+	$(MAKE) cleanup-after-bootable
 
 cleanup-after-bootable:
 	sudo umount tmp-mountpoint
