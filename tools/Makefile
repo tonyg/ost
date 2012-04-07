@@ -20,8 +20,10 @@ tree:	$(tree_files) menu.lst
 	cp grub/$(GRUB_ARCH)-pc/stage2_eltorito tree/boot/grub
 	cp menu.lst tree/boot/grub
 
+GENISOIMAGE=genisoimage
 image.iso:	tree
-	mkisofs -R -b boot/grub/stage2_eltorito \
+	$(GENISOIMAGE) \
+		-R -b boot/grub/stage2_eltorito \
 		-no-emul-boot \
 		-boot-load-size 4 \
 		-boot-info-table \
